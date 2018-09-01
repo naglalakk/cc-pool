@@ -24,10 +24,11 @@ size_t get_pool_block_size(CC_POOL *pool) {
 
 void generate_report(CC_POOL *pool) {
     size_t num_blocks = get_pool_block_size(pool);
+    size_t total_mem = 0;
     size_t row = 0;
     int ops[MAX_OPS] = {FREELY, NOCOLOR, CENTER, NONE};
     printf("num_blocks is: %zd\n", num_blocks);
-    table_t *report_table = initialize_table(ops, num_blocks + 1, 4);
+    table_t *report_table = initialize_table(ops, num_blocks + 3, 4);
     add_freely(report_table, row, 0, "Block ID");
     add_freely(report_table, row, 1, "Memory used");
     add_freely(report_table, row, 2, "Memory free");
@@ -61,10 +62,21 @@ void generate_report(CC_POOL *pool) {
 		    pool -> block -> block_size 
 		)
 	    );
+	    total_mem += pool -> block -> block_size;
 	    row++;
 	    pool = pool -> next;
 	}
     }
+
+    add_freely(report_table, row, 0, "==========");
+    add_freely(report_table, row, 1, "==========");
+    add_freely(report_table, row, 2, "==========");
+    add_freely(report_table, row, 3, "==========");
+
+    add_freely(report_table, row + 1, 0, "Total Memory");
+    add_freely(report_table, row + 1, 1, " ");
+    add_freely(report_table, row + 1, 2, " ");
+    add_freely(report_table, row + 1, 3, int_to_s(total_mem)); 
 
     print(report_table);
     free_table(report_table);
